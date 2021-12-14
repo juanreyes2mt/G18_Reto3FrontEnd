@@ -1,11 +1,11 @@
-$("#email").blur(function(){
-    let correo = $("#email").val()
+$("#useremail").blur(function(){
+    let correo = $("#useremail").val()
     if(!validarFormatoCorreo(correo)){
         mostrarFormatoInvalido()
     }
 })
 
-$("#email").click(function(){
+$("#useremail").click(function(){
     ocultarFormatoInvalido()
 })
 

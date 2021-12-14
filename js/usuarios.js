@@ -4,7 +4,6 @@ $(document).ready(function () {
 
 var usuariosActuales = [];
 $("#registrarUsuario").click(function () {
-  limpiarCampos()
   $(".modal-footer").empty();
   let txt = `
     <div class="container-fluid">
@@ -16,7 +15,7 @@ $("#registrarUsuario").click(function () {
             </div>
             <div class="col">
                 <div class="d-grid gap-2">
-                <button id="regresar" class="btn btn-dark" data-bs-dismiss="modal" type="button">Regresar</button>
+                <button class="btn btn-dark" data-bs-dismiss="modal" type="button">Regresar</button>
                 </div>
             </div>
         </div>
@@ -34,12 +33,9 @@ $("#registrarUsuario").click(function () {
       zone: $("#zone").val(),
       type: $("#type").val(),
     };
-    
+    console.log(usuario)
     crearUsuario(usuario);
   });
-  $("#regresar").click(function(){
-    limpiarCampos()
-  })
 });
 function cargarUsuarios() {
   $.ajax({
@@ -58,7 +54,7 @@ function cargarUsuarios() {
   });
 }
 function cargarTabla(usuarios) {
-  $("#tablaUsuarios").empty();
+  $("table").empty();
   let txt = `
     <thead>
           <th>Identificación</th>
@@ -90,7 +86,7 @@ function cargarTabla(usuarios) {
         `;
   }
   txt += "</tbody>";
-  $("#tablaUsuarios").append(txt);
+  $("table").append(txt);
 }
 var correoValido = false;
 function registrarse() {
@@ -102,8 +98,6 @@ function registrarse() {
 
 function crearUsuario(usuario) {
   let dataToSend = JSON.stringify(usuario);
-  values=[validar(),validaContraseña(),correoValido]
-  console.log(values)
   if (validar() == true && validaContraseña() == true && correoValido) {
     $.ajax({
       //url: "/api/user/new",
@@ -136,7 +130,7 @@ function validarExisteEmail(email, crear,actualizar=false) {
   //Generar una peticion tipo ajax para validar login
   $.ajax({
     //url: "/api/user/emailexist/" + email,
-    url: "http://168.138.126.1:8089/api/user/emailexist/" + email,
+    url: "http://168.138.126.1:8089/api/user/emailexist/"+email,
     type: "GET",
     dataType: "json",
     contentType: "aplication/JSON",
@@ -149,9 +143,11 @@ function validarExisteEmail(email, crear,actualizar=false) {
         correoValido = false;
       } else if(actualizar){
         correoValido = true;
-      } else {
-            correoValido=true
-        }
+      } else{
+        if (crear) {
+            crearUsuario();
+          }
+      }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log("Algo fallo");
@@ -249,7 +245,7 @@ function ocultarFormatoInvalido() {
 }
 
 function editarUsuario(id) {
-    let usuario = findById(parseInt(id));
+    let usuario = findById(id);
     $(".modal-footer").empty();
     let txt = `
     <div class="container-fluid">
@@ -292,9 +288,9 @@ function editarUsuario(id) {
         };
         actualizarUsuario(usuario);
       });
-    $("#regresar").click(function(){
-      limpiarCampos()
-    })
+      $("#regresar").click(function(){
+        limpiarCampos()
+      })
 
 }
 function actualizarUsuario(usuario){
@@ -327,14 +323,14 @@ function actualizarUsuario(usuario){
   }
 }
 function eliminarUsuario(id) {
-  let usuario = findById(parseInt(id));
+  let usuario = findById(id);
   let opc = confirm(
     `¿Está seguro que desea eliminar el usuario ${usuario.name}?`
   );
   if (opc) {
     $.ajax({
       //url: "/api/user/" + usuario.id,
-      url: "http://168.138.126.1:8089/api/user/" + usuario.id,
+      url: "http://168.138.126.1:8089/api/user/"+ usuario.id,
       type: "DELETE",
       dataType: "json",
       contentType: "application/json",

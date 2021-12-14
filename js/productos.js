@@ -35,7 +35,6 @@ $("#crearProducto").click(function () {
     crearProducto(producto);
   });
 });
-
 function cargarProductos() {
   limpiarTabla();
   $.ajax({
