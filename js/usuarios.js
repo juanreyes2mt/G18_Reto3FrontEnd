@@ -37,6 +37,7 @@ $("#registrarUsuario").click(function () {
     crearUsuario(usuario);
   });
 });
+
 function cargarUsuarios() {
   $.ajax({
     //url: "/api/user/all",
@@ -97,6 +98,16 @@ function registrarse() {
 }
 
 function crearUsuario(usuario) {
+  let usuario = {
+    identification: $("#identification").val(),
+    name: $("#name").val(),
+    address: $("#address").val(),
+    cellPhone: $("#cellphone").val(),
+    email: $("#email").val(),
+    password: $("#password").val(),
+    zone: $("#zone").val(),
+    type: $("#type").val(),
+  };
   let dataToSend = JSON.stringify(usuario);
   if (validar() == true && validaContraseña() == true && correoValido) {
     $.ajax({
@@ -116,7 +127,7 @@ function crearUsuario(usuario) {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log("Algo fallo");
+        console.log("Algo falló");
       },
     });
   } else {
